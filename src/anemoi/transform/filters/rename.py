@@ -21,8 +21,8 @@ class Rename(DispatchingFilter):
     """Rename field or tabular datasets."""
 
     def __init__(self, **config):
-        if set(config.keys()) == {"columns"}:
-            self.filter = RenameTabular(columns=config["columns"])
+        if set(config.keys()).issubset({"columns", "allow_missing_columns"}) and "columns" in config:
+            self.filter = RenameTabular(**config)
         else:
             self.filter = RenameField(**config)
 

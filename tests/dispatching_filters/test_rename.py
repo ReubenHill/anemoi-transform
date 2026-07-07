@@ -37,6 +37,25 @@ def test_rename_tabular():
     assert isinstance(result, pd.DataFrame)
 
 
+def test_rename_tabular_allow_missing_columns():
+    config = {
+        "columns": {
+            "x": "foo",
+        },
+        "allow_missing_columns": True,
+    }
+    df = pd.DataFrame(
+        {
+            # x is missing
+            "y": [3, 4, 5],
+        }
+    )
+    rename = create_filter("rename", **config)
+    result = rename(df.copy())
+    assert isinstance(result, pd.DataFrame)
+    assert tuple(result.columns) == ("y",)
+
+
 def test_rename_field(grib_source):
     rename = create_filter(
         "rename",

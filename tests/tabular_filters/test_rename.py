@@ -52,3 +52,25 @@ def test_rename_missing_column():
     rename = create_filter("rename", **config)
     with pytest.raises(ValueError):
         _ = rename(df.copy())
+
+
+def test_rename_missing_column_allowed():
+    config = {
+        "columns": {
+            "x": "foo",
+        },
+        "allow_missing_columns": True,
+    }
+    df = pd.DataFrame(
+        {
+            # x is missing
+            "y": [3, 4, 5],
+        }
+    )
+    rename = create_filter("rename", **config)
+    result = rename(df.copy())
+
+    assert isinstance(result, pd.DataFrame)
+    assert tuple(result.columns) == ("y",)
+    assert result.shape == df.shape
+    assert result["y"].equals(df["y"])

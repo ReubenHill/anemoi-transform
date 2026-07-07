@@ -22,6 +22,9 @@ class Rename(Filter):
     The configuration should be a dictionary with the key ``columns`` containing a
     dictionary which maps old column names to new column names.
 
+    The optional ``allow_missing_columns`` key (default ``False``) can be used
+    to skip missing source columns instead of raising an error.
+
     Examples
     --------
     .. code-block:: yaml
@@ -33,13 +36,20 @@ class Rename(Filter):
           - rename:
               columns:
                 from_name: to_name
+              allow_missing_columns: false
 
     """
 
-    def __init__(self, *, columns: dict[str, str]):
+    def __init__(self, *, columns: dict[str, str], allow_missing_columns: bool = False):
         self.columns = columns
+        self.allow_missing_columns = allow_missing_columns
 
     def forward(self, obs_df: pd.DataFrame) -> pd.DataFrame:
+      if not self.allow_missing_columns:
         raise_if_df_missing_cols(obs_df, list(self.columns.keys()))
-        obs_df = obs_df.rename(columns=self.columns)
-        return obs_df
+        columns_to_rename = self.columns
+      else:
+        columns_to_rename = {k: v for k, v in self.columns.items() if k in obs_df.columns}
+
+      obs_df = obs_df.rename(columns=columns_to_rename)
+      return obs_df
