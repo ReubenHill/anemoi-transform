@@ -36,7 +36,7 @@ class MaskDewpointTemperature(Filter):
         pipe:
           - source:
               ...
-          - mask_td:
+          - mask_dewpoint_temperature:
               mask_specific_humidity: true
               temperature: 2t
               dewpoint_temperature: 2td
