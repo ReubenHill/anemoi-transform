@@ -45,11 +45,11 @@ class Rename(Filter):
         self.allow_missing_columns = allow_missing_columns
 
     def forward(self, obs_df: pd.DataFrame) -> pd.DataFrame:
-      if not self.allow_missing_columns:
-        raise_if_df_missing_cols(obs_df, list(self.columns.keys()))
-        columns_to_rename = self.columns
-      else:
-        columns_to_rename = {k: v for k, v in self.columns.items() if k in obs_df.columns}
+        if not self.allow_missing_columns:
+            raise_if_df_missing_cols(obs_df, list(self.columns.keys()))
+            columns_to_rename = self.columns
+        else:
+            columns_to_rename = {k: v for k, v in self.columns.items() if k in obs_df.columns}
 
-      obs_df = obs_df.rename(columns=columns_to_rename)
-      return obs_df
+        obs_df = obs_df.rename(columns=columns_to_rename)
+        return obs_df
