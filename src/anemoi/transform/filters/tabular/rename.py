@@ -44,7 +44,7 @@ class Rename(Filter):
         self.columns = columns
         self.allow_missing_columns = allow_missing_columns
 
-    def forward(self, obs_df: pd.DataFrame) -> pd.DataFrame:
+    def forward(self, obs_df: pd.DataFrame) -> pd.DataFrame:  # type: ignore[override]
         if not self.allow_missing_columns:
             raise_if_df_missing_cols(obs_df, list(self.columns.keys()))
             columns_to_rename = self.columns
